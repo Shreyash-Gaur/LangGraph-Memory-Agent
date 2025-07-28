@@ -27,9 +27,9 @@ The **LangGraph Conversational Memory Agent** is a project that demonstrates how
 
 ```
 langgraph-memory-agent/
-├── test.ipynb                # Main notebook with agent implementation
-├── requirements.txt            # Python dependencies
-└── README.md                   # This file
+├── LangGraph-Memory-Agent.ipynb # Main notebook with agent implementation
+├── requirements.txt             # Python dependencies
+└── README.md                    # This file
 ```
 
 ## 🚀 Quick Start
@@ -69,10 +69,78 @@ You can test the agent's memory with a conversation like this:
       - *Agent recognizes this new interest, confirms it's not a duplicate, and stores it.*
   - **You**: `"What are my hobbies?"`
       - **Agent, recalling its memory**: `"You enjoy playing chess and being a fan of The Lord of the Rings."`
+You got it\! Here's the code and its output, formatted for your README:
 
-## 🎨 Visualization Features
+## LangGraph Memory Agent Conversation Example
 
-The project includes a built-in method to visualize the agent's graph structure. The notebook uses `graph.get_graph().draw_mermaid_png()` to generate a clear diagram of all the nodes and the conditional edges connecting them, making it easy to understand the agent's decision-making flow.
+This code demonstrates how to interact with the LangGraph memory agent, showing how it remembers and utilizes previously provided personal information in subsequent turns of a conversation.
+
+```python
+# Let's run a continuous conversation
+# Use the same thread_id to maintain context
+config = {"configurable": {"thread_id": "conversation-1"}}
+
+# --- Turn 1: User introduces themselves ---
+input1 = {"messages": [HumanMessage(content="Hi, my name is Alex and I love to play chess.")]}
+response = graph.invoke(input=input1, config=config)
+print("\nFinal Response 1:", response['messages'][-1].content)
+
+
+
+# --- Turn 2: User adds more information ---
+input2 = {"messages": [HumanMessage(content="I'm also a big fan of The Lord of the Rings.")]}
+response = graph.invoke(input=input2, config=config)
+print("\nFinal Response 2:", response['messages'][-1].content)
+
+
+
+# --- Turn 3: User asks a question that relies on memory ---
+input3 = {"messages": [HumanMessage(content="What are my hobbies?")]}
+response = graph.invoke(input=input3, config=config)
+print("\nFinal Response 3:", response['messages'][-1].content)
+```
+
+### Output
+
+```
+Classifier Result: Yes
+Extracted Info: User's name is Alex and they love playing chess.
+Stored new memory for user user-123: User's name is Alex and they love playing chess.
+
+----- Logging Personal Memory -----
+[Memory 1] User's name is Alex and they love playing chess.
+-----------------------------------
+
+
+Final Response 1: Hello Alex! It's great to meet you. I've heard that you're an avid chess player - do you have a favorite opening or strategy? Or perhaps you're looking for some tips or advice on improving your game? I'm here to help!
+
+
+
+Classifier Result: Yes
+Extracted Info: User is a fan of The Lord of the Rings.
+Duplicate Check Result: No
+Stored new memory for user user-123: User is a fan of The Lord of the Rings.
+
+----- Logging Personal Memory -----
+[Memory 1] User's name is Alex and they love playing chess.
+[Memory 2] User is a fan of The Lord of the Rings.
+-----------------------------------
+
+
+Final Response 2: A fan of Middle-earth, eh? Which character is your favorite - is it Frodo, Sam, Aragorn, or perhaps Gollum? Or do you have a special place in your heart for the Elves, Dwarves, or Men? I'm curious to know more about what draws you to J.R.R. Tolkien's epic world!
+
+
+
+Classifier Result: No
+
+----- Logging Personal Memory -----
+[Memory 1] User's name is Alex and they love playing chess.
+[Memory 2] User is a fan of The Lord of the Rings.
+-----------------------------------
+
+
+Final Response 3: You enjoy playing chess and being a fan of The Lord of the Rings.
+```
 
 ## 🔧 Customization
 
@@ -124,12 +192,6 @@ We welcome contributions\! Please feel free to:
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-  - **LangChain & LangGraph Teams** for creating the powerful frameworks that make building complex agents possible.
-  - **Ollama** for providing an incredible platform for running local LLMs with ease.
-  - **The Open Source Community** for their continuous innovation and support.
 
 *Ready to build smarter, more personal conversational agents? Let's get started\!* 🚀
 
